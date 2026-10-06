@@ -1,4 +1,4 @@
-let<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -1794,8 +1794,8 @@ let<!doctype html>
       <div class="hero-grid shell">
         <div class="hero-copy">
           <div class="eyebrow">Airship Wallet · Boarding passes</div>
-          <h1>From flight data to a live wallet experience.</h1>
-          <p>One flight record. One passenger-aware Adaptive Link. The right pass for Apple or Google — with updates that follow the journey.</p>
+          <h1>One flight record becomes a boarding pass in every passenger’s wallet.</h1>
+          <p>Airship stores the flight once and provides one Adaptive Link per passenger. The link detects Apple or Google, returns the right pass and keeps it current as the flight changes.</p>
           <div class="hero-actions">
             <a class="button" href="#lifecycle">Explore the lifecycle</a>
             <a class="button secondary" href="#comparison">Why Airship</a>
@@ -1805,7 +1805,7 @@ let<!doctype html>
               <circle cx="14" cy="14" r="13" stroke="currentColor"/>
               <path d="M9 14.2l3.1 3.1L19.4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Platform-specific rendering, pass hosting, and update delivery stay behind one API surface.
+            Rendering for each platform, pass hosting and update delivery all sit behind one API.
           </div>
         </div>
 
@@ -1876,8 +1876,8 @@ let<!doctype html>
     <section class="customer-proof" id="customers">
       <div class="shell">
         <div class="customer-proof-head">
-          <h2>Airline day-of-travel experiences powered by Airship.</h2>
-          <p>These customers all use Airship Wallet for boarding passes.</p>
+          <h2>Airlines running boarding passes on Airship.</h2>
+          <p>These customers all use Airship Wallet for boarding passes. Published results from four of them are below.</p>
         </div>
 
         <div class="logo-ribbon" aria-label="Selected Airship airline customers">
@@ -1937,7 +1937,7 @@ let<!doctype html>
           <article class="proof-stat">
             <span class="stat-value">#1</span>
             <strong>Virgin Atlantic</strong>
-            <p>Its reimagined app ranked first in Travel on the iOS App Store during launch week, with Airship supporting timely travel updates.</p>
+            <p>Its redesigned app ranked first in Travel on the iOS App Store during launch week. Airship supports its travel updates.</p>
             <a href="https://www.deloitte.com/uk/en/Industries/consumer/case-studies/elevating-virgin-atlantics-guest-journey.html" target="_blank" rel="noreferrer">Partner story ↗</a>
           </article>
         </div>
@@ -1965,9 +1965,9 @@ let<!doctype html>
         <div class="section-head">
           <div>
             <div class="eyebrow">The lifecycle</div>
-            <h2>Model once. Personalize per passenger. Update continuously.</h2>
+            <h2>The flight and the passenger are modelled separately.</h2>
           </div>
-          <p>The flight is independent from the passenger. That separation is what lets one operational update propagate across every linked boarding pass.</p>
+          <p>This lets one operational update reach every linked boarding pass.</p>
         </div>
 
         <div class="lifecycle" aria-label="Five-step boarding pass lifecycle">
@@ -2004,7 +2004,7 @@ let<!doctype html>
         </div>
 
         <div class="lifecycle-callout" aria-live="polite">
-          <p id="lifecycle-detail"><strong>Start with two templates.</strong> The template controls design and platform settings; API payloads supply real flight and passenger data.</p>
+          <p id="lifecycle-detail">Start with two templates. The template controls design and platform settings, and the API payload supplies the real flight and passenger data.</p>
           <a class="button secondary" id="lifecycle-link" href="#apis">See API examples</a>
         </div>
       </div>
@@ -2015,9 +2015,9 @@ let<!doctype html>
         <div class="section-head">
           <div>
             <div class="eyebrow">Solution architecture</div>
-            <h2>Airline systems stay the source of truth. Airship handles the wallet layer.</h2>
+            <h2>Airline systems stay the source of truth.</h2>
           </div>
-          <p>PNR, check-in, and flight operations feed a platform-neutral model. Airship turns it into signed, hosted, updatable wallet passes.</p>
+          <p>PNR, check-in and flight operations feed a platform-neutral model. Airship turns that data into signed, hosted and updatable wallet passes.</p>
         </div>
 
         <div class="architecture">
@@ -2041,7 +2041,7 @@ let<!doctype html>
             <div class="core-grid">
               <div class="core-item"><strong>Templates</strong><span>Brand and platform configuration for Apple and Google</span></div>
               <div class="core-item"><strong>Flight entity</strong><span>Shared operational record referenced by many passes</span></div>
-              <div class="core-item"><strong>Adaptive Links</strong><span>Passenger personalization and device-aware routing</span></div>
+              <div class="core-item"><strong>Adaptive Links</strong><span>Passenger personalisation and device-aware routing</span></div>
               <div class="core-item"><strong>Pass delivery</strong><span>Generation, signing, hosting, registration, and updates</span></div>
             </div>
           </div>
@@ -2100,8 +2100,8 @@ let<!doctype html>
         <div class="automap-note">
           <span class="automap-icon" aria-hidden="true">A</span>
           <div>
-            <strong>Standard fields are enough for the refreshed Apple experience.</strong>
-            <span>Airship automatically maps standard boarding-pass fields to iOS 26 semantic tags, so the baseline integration does not need duplicate <code>semantics</code> objects.</span>
+            <strong>Airship maps the fields for you.</strong>
+            <span>Standard boarding-pass fields are mapped to iOS 26 semantic tags. You do not need to repeat the data in a <code>semantics</code> object.</span>
           </div>
           <a href="https://www.airship.com/docs/whats-new/2025-09-15-boarding-pass-semantics/" target="_blank" rel="noreferrer">Semantic auto-mapping ↗</a>
         </div>
@@ -2278,7 +2278,7 @@ Content-Type: application/json
         <div class="section-head">
           <div>
             <div class="eyebrow">Build vs. Airship</div>
-            <h2>Keep airline logic. Avoid rebuilding wallet infrastructure.</h2>
+            <h2>The same capabilities, two different ways of getting them.</h2>
           </div>
           <p>Airship does not replace flight operations or check-in. It removes the platform plumbing between those systems and the passenger’s wallet.</p>
         </div>
@@ -2287,24 +2287,24 @@ Content-Type: application/json
           <article class="platform-advantage">
             <span class="advantage-number">01</span>
             <div>
-              <h3>Apple semantics, automatically mapped</h3>
-              <p>Airship provides Day 1 support and maps existing standard boarding-pass fields to iOS 26 semantic tags — enabling the refreshed pass experience without duplicating data in the baseline API payload.</p>
+              <h3>Apple semantic tags without duplicate data</h3>
+              <p>Airship maps standard boarding-pass fields to iOS 26 semantic tags. The baseline API payload does not need a second copy of the data.</p>
               <a href="https://www.airship.com/docs/whats-new/2025-09-15-boarding-pass-semantics/" target="_blank" rel="noreferrer">See semantic-tag support ↗</a>
             </div>
           </article>
           <article class="platform-advantage">
             <span class="advantage-number">02</span>
             <div>
-              <h3>Google Wallet passes that travel together</h3>
-              <p>Auto Linked Passes can connect an Emirates boarding pass with the traveler’s Emirates Skywards membership card, so Google Wallet groups both together without a second save or install step.</p>
+              <h3>Boarding pass and Skywards card together</h3>
+              <p>Auto Linked Passes connect an Emirates boarding pass with the traveller’s Skywards membership card. Google Wallet groups both without a second save or install step.</p>
               <a href="https://www.airship.com/docs/whats-new/2026-05-11-google-wallet-auto-linked-passes/" target="_blank" rel="noreferrer">See Auto Linked Passes ↗</a>
             </div>
           </article>
           <article class="platform-advantage">
             <span class="advantage-number">03</span>
             <div>
-              <h3>One link for the whole journey</h3>
-              <p>Multi-Pass Adaptive Links bundle up to 10 passes into one URL — especially useful for multi-flight and connecting itineraries, as well as family or group travel.</p>
+              <h3>One link for a multi-flight journey</h3>
+              <p>Multi-Pass Adaptive Links bundle up to 10 passes into one URL. This works for connecting itineraries, as well as family or group travel.</p>
               <a href="https://www.airship.com/docs/whats-new/2024-12-03-wallet-multi-pass-adaptive-links/" target="_blank" rel="noreferrer">See Multi-Pass Adaptive Links ↗</a>
             </div>
           </article>
@@ -2337,14 +2337,14 @@ Content-Type: application/json
             <div class="comparison-build">Build your own mapping from flights to every issued pass and maintain fan-out jobs.</div>
           </div>
           <div class="comparison-row">
-            <div class="comparison-topic">Passenger personalization</div>
+            <div class="comparison-topic">Passenger personalisation</div>
             <div class="comparison-airship"><span class="check">✓</span>Passenger objects sit inside the Adaptive Link payload and retain external IDs for updates.</div>
-            <div class="comparison-build">Design identity, pass lookup, serialization, and update targeting across both ecosystems.</div>
+            <div class="comparison-build">Design identity, pass lookup, serialisation and update targeting across both ecosystems.</div>
           </div>
           <div class="comparison-row">
             <div class="comparison-topic">Apple semantic boarding passes</div>
             <div class="comparison-airship"><span class="check">✓</span>Day 1 support plus automatic mapping from standard boarding-pass fields to semantic tags.</div>
-            <div class="comparison-build">Map and maintain Apple’s semantic schema, version behavior, and new UI capabilities yourself.</div>
+            <div class="comparison-build">Map and maintain Apple’s semantic schema, version behaviour, and new UI capabilities yourself.</div>
           </div>
           <div class="comparison-row">
             <div class="comparison-topic">Google companion passes</div>
@@ -2353,7 +2353,7 @@ Content-Type: application/json
           </div>
           <div class="comparison-row">
             <div class="comparison-topic">Multi-flight journey distribution</div>
-            <div class="comparison-airship"><span class="check">✓</span>Deliver up to 10 boarding passes for connecting flights — or passes for a group — from one Multi-Pass Adaptive Link.</div>
+            <div class="comparison-airship"><span class="check">✓</span>Deliver up to 10 boarding passes for connecting flights or a group from one Multi-Pass Adaptive Link.</div>
             <div class="comparison-build">Build itinerary-level bundle orchestration, cross-pass lookup, platform routing, and a combined download experience.</div>
           </div>
           <div class="comparison-row">
@@ -2397,9 +2397,9 @@ Content-Type: application/json
         <div class="section-head">
           <div>
             <div class="eyebrow">Official references</div>
-            <h2>Go from the story to the specification.</h2>
+            <h2>The documentation behind this page.</h2>
           </div>
-          <p>The lifecycle and API structure on this page are based on Airship’s Wallet documentation. Always confirm schemas and supported behavior against the current reference.</p>
+          <p>The lifecycle and API structure on this page are based on Airship’s Wallet documentation. Always confirm schemas and supported behaviour against the current reference.</p>
         </div>
         <div class="docs-grid">
           <a class="doc-link" href="https://www.airship.com/docs/guides/wallet/user-guide/create-links/flights-boarding-passes/" target="_blank" rel="noreferrer">
@@ -2434,8 +2434,8 @@ Content-Type: application/json
     <section class="closing">
       <div class="closing-grid shell">
         <div>
-          <h2>Build the airline experience — not the wallet plumbing.</h2>
-          <p>Airship gives Emirates a maintained delivery layer for dynamic Apple and Google wallet passes while airline systems remain authoritative for the journey.</p>
+          <h2>A maintained delivery layer for Apple and Google passes.</h2>
+          <p>Airship generates, hosts and updates the passes, while Emirates’ systems stay authoritative for the journey.</p>
         </div>
         <a class="button" href="https://www.airship.com/docs/guides/wallet/user-guide/create-links/flights-boarding-passes/" target="_blank" rel="noreferrer">Read the full guide ↗</a>
       </div>
@@ -2462,23 +2462,23 @@ Content-Type: application/json
 
       const lifecycleCopy = {
         template: {
-          text: "<strong>Start with two templates.</strong> The template controls design and platform settings; API payloads supply real flight and passenger data.",
+          text: "Start with two templates. The template controls design and platform settings, and the API payload supplies the real flight and passenger data.",
           tab: "flight"
         },
         flight: {
-          text: "<strong>Create shared flight data once.</strong> Airship returns a flight ID that every passenger boarding pass can reference.",
+          text: "Create the shared flight data once. Airship returns a flight ID that every passenger boarding pass can reference.",
           tab: "flight"
         },
         link: {
-          text: "<strong>Add one passenger object per pass holder.</strong> Each passenger receives an Adaptive Link external ID and a device-aware URL.",
+          text: "Add one passenger object per pass holder. Each passenger receives an Adaptive Link external ID and a device-aware URL.",
           tab: "link"
         },
         delivery: {
-          text: "<strong>Distribute a single URL.</strong> Airship detects Apple or Google and serves the correct pass from the matching template.",
+          text: "Distribute a single URL. Airship detects Apple or Google and serves the correct pass from the matching template.",
           tab: "link"
         },
         update: {
-          text: "<strong>Choose the right update scope.</strong> Update the flight for shared operational changes, or the passenger object for seat and cabin changes.",
+          text: "Update the flight for shared operational changes, or the passenger object for seat and cabin changes.",
           tab: "passenger-update"
         }
       };
