@@ -1,0 +1,2554 @@
+let<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual guide to the Airship boarding pass lifecycle: flights, passengers, Adaptive Links, Apple Wallet, Google Wallet, and updates.">
+  <meta name="theme-color" content="#101828">
+  <title>Airship Boarding Pass Lifecycle</title>
+  <style>
+    :root {
+      --paper: #f4f1ea;
+      --surface: #ffffff;
+      --surface-soft: #ebe7de;
+      --ink: #101828;
+      --muted: #5d6678;
+      --line: #d2cec5;
+      --red: #c71924;
+      --red-dark: #92121a;
+      --teal: #006c67;
+      --teal-soft: #dcecea;
+      --amber: #9b6000;
+      --amber-soft: #f3e7c9;
+      --code: #111827;
+      --code-line: #283244;
+      --code-ink: #e8edf7;
+      --radius-sm: 8px;
+      --radius: 16px;
+      --radius-lg: 26px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    code,
+    pre,
+    .mono {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 8px;
+      left: 8px;
+      padding: 10px 14px;
+      background: var(--ink);
+      color: white;
+      border-radius: var(--radius-sm);
+      transform: translateY(-150%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 50;
+      top: 0;
+      border-bottom: 1px solid rgba(16, 24, 40, 0.12);
+      background: rgba(244, 241, 234, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 28px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--ink);
+    }
+
+    .nav-cta,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fff !important;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--ink) !important;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--red);
+      border-color: var(--red);
+      outline: none;
+    }
+
+    .button.secondary:hover,
+    .button.secondary:focus-visible {
+      color: white !important;
+    }
+
+    .hero {
+      padding: 88px 0 70px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+      align-items: center;
+      gap: 72px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+      color: var(--red-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 24px;
+      font-size: clamp(46px, 7vw, 86px);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .hero-copy > p {
+      max-width: 670px;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 34px;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hero-note svg {
+      flex: 0 0 auto;
+    }
+
+    .pass-stack {
+      position: relative;
+      min-height: 490px;
+    }
+
+    .pass-shadow {
+      position: absolute;
+      inset: 36px 18px 12px 55px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface-soft);
+      transform: rotate(5deg);
+    }
+
+    .boarding-pass {
+      position: absolute;
+      inset: 0 45px 34px 0;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+      transform: rotate(-2deg);
+    }
+
+    .pass-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 25px 28px 20px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .airline {
+      color: var(--red);
+      font-size: 21px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .pass-chip {
+      padding: 5px 10px;
+      align-self: flex-start;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .route {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 34px 28px 26px;
+    }
+
+    .airport:last-child {
+      text-align: right;
+    }
+
+    .airport strong {
+      display: block;
+      font-size: clamp(44px, 6vw, 66px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .airport span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .flight-path {
+      position: relative;
+      width: 112px;
+      height: 34px;
+    }
+
+    .flight-path::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      border-top: 1px dashed var(--muted);
+    }
+
+    .plane {
+      position: absolute;
+      top: 5px;
+      left: calc(50% - 11px);
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: white;
+    }
+
+    .pass-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      padding: 0 28px 26px;
+    }
+
+    .detail span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .detail strong {
+      font-size: 16px;
+    }
+
+    .pass-footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 24px;
+      padding: 23px 28px 28px;
+      border-top: 1px dashed var(--line);
+      background: #faf9f6;
+    }
+
+    .barcode {
+      height: 52px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          var(--ink) 0 2px,
+          transparent 2px 5px,
+          var(--ink) 5px 6px,
+          transparent 6px 9px
+        );
+      opacity: 0.86;
+    }
+
+    .wallet-pills {
+      display: flex;
+      gap: 7px;
+    }
+
+    .wallet-pill {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: white;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .hero-badge {
+      position: absolute;
+      right: 4px;
+      bottom: 0;
+      width: 168px;
+      padding: 16px 18px;
+      border: 1px solid var(--ink);
+      border-radius: 14px;
+      background: var(--amber-soft);
+      transform: rotate(3deg);
+    }
+
+    .hero-badge strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .hero-badge span {
+      color: #684300;
+      font-size: 11px;
+    }
+
+    .metric-strip {
+      border-block: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 16px;
+      min-height: 130px;
+      padding: 24px 34px;
+      border-right: 1px solid var(--line);
+    }
+
+    .metric:last-child {
+      border-right: 0;
+    }
+
+    .metric-number {
+      font-size: 46px;
+      font-weight: 850;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .metric p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--ink);
+    }
+
+    .customer-proof {
+      padding: 58px 0 68px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .customer-proof-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .customer-proof-head h2 {
+      max-width: 620px;
+      margin-bottom: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .customer-proof-head p {
+      max-width: 420px;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .logo-ribbon {
+      overflow-x: auto;
+      border-block: 1px solid var(--line);
+      scrollbar-width: thin;
+    }
+
+    .airline-logos {
+      min-width: 980px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .airline-logo {
+      min-height: 112px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 14px;
+      border-right: 1px solid var(--line);
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .airline-logo:last-child {
+      border-right: 0;
+    }
+
+    .airline-logo img {
+      width: min(100%, 108px);
+      height: 34px;
+      display: block;
+      object-fit: contain;
+      filter: grayscale(1);
+      opacity: 0.72;
+      transition: filter 150ms ease, opacity 150ms ease, transform 150ms ease;
+    }
+
+    .airline-logo span {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    a.airline-logo:hover img,
+    a.airline-logo:focus-visible img {
+      filter: grayscale(0);
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    a.airline-logo:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: -2px;
+    }
+
+    .proof-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 34px;
+      border-block: 1px solid var(--line);
+    }
+
+    .proof-stat {
+      min-height: 170px;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+    }
+
+    .proof-stat:last-child {
+      border-right: 0;
+    }
+
+    .proof-stat .stat-value {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--red);
+      font-size: 37px;
+      font-weight: 850;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .proof-stat strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+
+    .proof-stat p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .proof-stat a {
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .proof-stat a:hover,
+    .proof-stat a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .semantic-program {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1.4fr);
+      align-items: center;
+      gap: 26px;
+      margin-top: 22px;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: white;
+    }
+
+    .semantic-program strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .semantic-program small {
+      display: block;
+      color: #aeb8ca;
+      font-size: 10px;
+    }
+
+    .semantic-airlines {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .semantic-airlines span {
+      padding: 6px 10px;
+      border: 1px solid #4a566b;
+      border-radius: 999px;
+      color: #e7ebf2;
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .proof-footnote {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .proof-footnote a {
+      color: var(--teal);
+    }
+
+    section {
+      scroll-margin-top: 90px;
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .section.dark {
+      background: var(--ink);
+      color: white;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(320px, 0.55fr);
+      align-items: end;
+      justify-content: space-between;
+      gap: 72px;
+      margin-bottom: 52px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 0;
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .section-head p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .dark .section-head p {
+      color: #a9b2c4;
+    }
+
+    .lifecycle {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(170px, 1fr));
+      gap: 12px;
+    }
+
+    .lifecycle::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 36px;
+      left: 9%;
+      right: 9%;
+      border-top: 2px solid var(--line);
+    }
+
+    .life-step {
+      position: relative;
+      z-index: 1;
+      appearance: none;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .step-number {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 20px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: var(--paper);
+      font-size: 22px;
+      font-weight: 850;
+      transition: background 150ms ease, color 150ms ease, transform 150ms ease;
+    }
+
+    .life-step:hover .step-number,
+    .life-step:focus-visible .step-number,
+    .life-step.active .step-number {
+      background: var(--red);
+      color: white;
+      transform: translateY(-4px);
+    }
+
+    .life-step:focus-visible {
+      outline: none;
+    }
+
+    .life-step h3 {
+      margin-bottom: 7px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .life-step p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .endpoint {
+      display: inline-block;
+      padding: 4px 7px;
+      border-radius: 5px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .lifecycle-callout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 28px;
+      margin-top: 44px;
+      padding: 25px 28px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .lifecycle-callout p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .lifecycle-callout strong {
+      color: var(--ink);
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 0.9fr 1.35fr 0.9fr;
+      align-items: stretch;
+      gap: 42px;
+    }
+
+    .system-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .column-label {
+      margin-bottom: 4px;
+      color: #8995aa;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .system-node {
+      position: relative;
+      min-height: 95px;
+      padding: 20px;
+      border: 1px solid #3a465a;
+      border-radius: var(--radius);
+      background: #172033;
+    }
+
+    .system-node strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .system-node span {
+      display: block;
+      color: #a9b2c4;
+      font-size: 12px;
+    }
+
+    .system-node.in::after,
+    .system-node.out::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 43px;
+      border-top: 1px dashed #6c7890;
+    }
+
+    .system-node.in::after {
+      right: -43px;
+    }
+
+    .system-node.out::before {
+      left: -43px;
+    }
+
+    .airship-core {
+      padding: 26px;
+      border: 1px solid #68758c;
+      border-radius: var(--radius-lg);
+      background: #f5f7fb;
+      color: var(--ink);
+    }
+
+    .core-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .core-title strong {
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .core-title span {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .core-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .core-item {
+      min-height: 105px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+
+    .core-item strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .core-item span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .fanout {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 28px;
+      margin-top: 48px;
+      align-items: center;
+    }
+
+    .fan-card {
+      min-height: 230px;
+      padding: 26px;
+      border: 1px solid #3a465a;
+      border-radius: var(--radius);
+      background: #172033;
+    }
+
+    .fan-card h3 {
+      margin-bottom: 10px;
+      font-size: 21px;
+    }
+
+    .fan-card > p {
+      color: #a9b2c4;
+      font-size: 14px;
+    }
+
+    .fan-card ul {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .fan-card li {
+      position: relative;
+      margin-top: 9px;
+      padding-left: 18px;
+      color: #dce2ed;
+      font-size: 13px;
+    }
+
+    .fan-card li::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #50bfb5;
+    }
+
+    .fan-arrow {
+      width: 54px;
+      color: #8995aa;
+    }
+
+    .api-layout {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .api-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .api-tab {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .api-tab:hover,
+    .api-tab:focus-visible {
+      background: var(--surface-soft);
+      outline: none;
+    }
+
+    .api-tab.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .api-tab .tab-index {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .api-tab strong,
+    .api-tab small {
+      display: block;
+    }
+
+    .api-tab strong {
+      font-size: 13px;
+    }
+
+    .api-tab small {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .api-tab.active small {
+      color: #aeb8ca;
+    }
+
+    .code-panel {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--code-line);
+      border-radius: var(--radius);
+      background: var(--code);
+      color: var(--code-ink);
+    }
+
+    .code-panel[hidden] {
+      display: none;
+    }
+
+    .code-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 58px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--code-line);
+    }
+
+    .code-title {
+      min-width: 0;
+    }
+
+    .code-title strong,
+    .code-title span {
+      display: block;
+    }
+
+    .code-title strong {
+      font-size: 13px;
+    }
+
+    .code-title span {
+      overflow: hidden;
+      color: #8f9caf;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-button {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border: 1px solid #455169;
+      border-radius: 7px;
+      background: transparent;
+      color: #d7deea;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .copy-button:hover,
+    .copy-button:focus-visible {
+      border-color: white;
+      outline: none;
+    }
+
+    pre {
+      max-height: 570px;
+      margin: 0;
+      padding: 22px;
+      overflow: auto;
+      font-size: 12px;
+      line-height: 1.7;
+      tab-size: 2;
+    }
+
+    .code-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 18px;
+      border-top: 1px solid var(--code-line);
+      color: #aeb8ca;
+      font-size: 11px;
+    }
+
+    .code-note a {
+      color: #75d7cf;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .automap-note {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 18px 20px;
+      border: 1px solid #a9cbc7;
+      border-radius: var(--radius);
+      background: var(--teal-soft);
+    }
+
+    .automap-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: white;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .automap-note strong,
+    .automap-note span {
+      display: block;
+    }
+
+    .automap-note strong {
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+
+    .automap-note span {
+      color: #315e5b;
+      font-size: 12px;
+    }
+
+    .automap-note a {
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .platform-advantages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .platform-advantage {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      min-height: 170px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .advantage-number {
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .platform-advantage h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .platform-advantage p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .platform-advantage a {
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .comparison-wrap {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+    }
+
+    .comparison-head,
+    .comparison-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.7fr) minmax(260px, 1fr) minmax(260px, 1fr);
+    }
+
+    .comparison-head > div {
+      padding: 25px 24px;
+      border-right: 1px solid var(--line);
+    }
+
+    .comparison-head > div:last-child {
+      border-right: 0;
+    }
+
+    .comparison-head .airship-col {
+      background: var(--ink);
+      color: white;
+    }
+
+    .comparison-head .build-col {
+      background: var(--surface-soft);
+    }
+
+    .comparison-head span {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .comparison-head .airship-col span {
+      color: #9eabbf;
+    }
+
+    .comparison-head strong {
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .comparison-row {
+      border-top: 1px solid var(--line);
+    }
+
+    .comparison-row > div {
+      padding: 19px 24px;
+      border-right: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .comparison-row > div:last-child {
+      border-right: 0;
+    }
+
+    .comparison-topic {
+      font-weight: 800;
+    }
+
+    .comparison-airship {
+      color: #263347;
+    }
+
+    .comparison-build {
+      color: var(--muted);
+      background: #faf9f6;
+    }
+
+    .check {
+      display: inline-grid;
+      place-items: center;
+      width: 19px;
+      height: 19px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 900;
+      vertical-align: -2px;
+    }
+
+    .ownership {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .ownership-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .ownership-card.airship {
+      background: var(--teal-soft);
+    }
+
+    .ownership-card.airline {
+      background: var(--amber-soft);
+    }
+
+    .ownership-card h3 {
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .ownership-card ul {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px 22px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ownership-card li {
+      position: relative;
+      padding-left: 16px;
+      font-size: 13px;
+    }
+
+    .ownership-card li::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .doc-link {
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .doc-link:hover,
+    .doc-link:focus-visible {
+      border-color: var(--ink);
+      outline: none;
+      transform: translateY(-3px);
+    }
+
+    .doc-link span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    .doc-link strong {
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .doc-link i {
+      align-self: flex-end;
+      font-size: 21px;
+      font-style: normal;
+    }
+
+    .closing {
+      padding: 74px 0;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .closing-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .closing h2 {
+      margin-bottom: 10px;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+    }
+
+    .closing p {
+      max-width: 670px;
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 28px 0;
+      background: var(--ink);
+      color: #aeb8ca;
+      font-size: 12px;
+    }
+
+    .footer-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 90;
+      right: 22px;
+      bottom: 22px;
+      padding: 11px 15px;
+      border-radius: 9px;
+      background: var(--ink);
+      color: white;
+      font-size: 12px;
+      font-weight: 750;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .nav-links a:not(.nav-cta) {
+        display: none;
+      }
+
+      .hero-grid,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        gap: 50px;
+      }
+
+      .pass-stack {
+        width: min(100%, 620px);
+        margin-inline: auto;
+      }
+
+      .lifecycle {
+        grid-template-columns: repeat(5, 205px);
+        padding-bottom: 12px;
+        overflow-x: auto;
+      }
+
+      .architecture {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .system-node.in::after,
+      .system-node.out::before {
+        display: none;
+      }
+
+      .system-column {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .column-label {
+        grid-column: 1 / -1;
+      }
+
+      .api-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .api-tabs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .api-tab {
+        grid-template-columns: 1fr;
+      }
+
+      .api-tab .tab-index {
+        display: none;
+      }
+
+      .ownership {
+        grid-template-columns: 1fr;
+      }
+
+      .platform-advantages {
+        grid-template-columns: 1fr;
+      }
+
+      .customer-proof-head {
+        align-items: start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .customer-proof-head p {
+        max-width: 650px;
+        text-align: left;
+      }
+
+      .proof-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .proof-stat:nth-child(2) {
+        border-right: 0;
+      }
+
+      .proof-stat:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .docs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(calc(100% - 28px), var(--max));
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      h1 {
+        font-size: clamp(44px, 15vw, 64px);
+      }
+
+      .pass-stack {
+        min-height: 410px;
+      }
+
+      .boarding-pass {
+        right: 16px;
+      }
+
+      .pass-shadow,
+      .hero-badge {
+        display: none;
+      }
+
+      .route {
+        padding-inline: 20px;
+      }
+
+      .flight-path {
+        width: 65px;
+      }
+
+      .pass-details,
+      .pass-top,
+      .pass-footer {
+        padding-inline: 20px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .metric {
+        min-height: 100px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .metric:last-child {
+        border-bottom: 0;
+      }
+
+      .customer-proof {
+        padding-block: 46px 54px;
+      }
+
+      .proof-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-stat,
+      .proof-stat:nth-child(2) {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .proof-stat:last-child {
+        border-bottom: 0;
+      }
+
+      .semantic-program {
+        grid-template-columns: 1fr;
+      }
+
+      .semantic-airlines {
+        justify-content: flex-start;
+      }
+
+      .automap-note {
+        grid-template-columns: auto 1fr;
+      }
+
+      .automap-note a {
+        grid-column: 2;
+      }
+
+      .section {
+        padding: 72px 0;
+      }
+
+      .section-head {
+        gap: 20px;
+        margin-bottom: 38px;
+      }
+
+      .lifecycle-callout,
+      .fanout,
+      .closing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .fan-arrow {
+        width: 36px;
+        margin-inline: auto;
+        transform: rotate(90deg);
+      }
+
+      .api-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .comparison-wrap {
+        overflow-x: auto;
+      }
+
+      .comparison-head,
+      .comparison-row {
+        min-width: 790px;
+      }
+
+      .ownership-card ul {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .doc-link {
+        min-height: 120px;
+      }
+
+      .footer-grid {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      .site-header,
+      .hero-actions,
+      .copy-button,
+      .toast {
+        display: none !important;
+      }
+
+      .section,
+      .hero {
+        padding-block: 38px;
+      }
+
+      .code-panel[hidden] {
+        display: block;
+        margin-top: 18px;
+      }
+
+      .api-layout {
+        display: block;
+      }
+
+      .api-tabs {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="#top">
+        <img class="brand-mark" src="assets/airship-icon.png" alt="" aria-hidden="true">
+        <span>AIRSHIP <small>Wallet architecture</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="#customers">Customers</a>
+        <a href="#lifecycle">Lifecycle</a>
+        <a href="#apis">API calls</a>
+        <a href="#comparison">Build vs buy</a>
+        <a class="nav-cta" href="#docs">Open docs</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-grid shell">
+        <div class="hero-copy">
+          <div class="eyebrow">Airship Wallet · Boarding passes</div>
+          <h1>From flight data to a live wallet experience.</h1>
+          <p>One flight record. One passenger-aware Adaptive Link. The right pass for Apple or Google — with updates that follow the journey.</p>
+          <div class="hero-actions">
+            <a class="button" href="#lifecycle">Explore the lifecycle</a>
+            <a class="button secondary" href="#comparison">Why Airship</a>
+          </div>
+          <div class="hero-note">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+              <circle cx="14" cy="14" r="13" stroke="currentColor"/>
+              <path d="M9 14.2l3.1 3.1L19.4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Platform-specific rendering, pass hosting, and update delivery stay behind one API surface.
+          </div>
+        </div>
+
+        <div class="pass-stack" aria-label="Illustration of an Emirates boarding pass from Munich to Dubai">
+          <div class="pass-shadow"></div>
+          <article class="boarding-pass">
+            <div class="pass-top">
+              <div>
+                <div class="airline">Emirates</div>
+                <small class="mono">EK 50 · BOARDING PASS</small>
+              </div>
+              <span class="pass-chip">Live</span>
+            </div>
+            <div class="route">
+              <div class="airport">
+                <strong>MUC</strong>
+                <span>Munich</span>
+              </div>
+              <div class="flight-path" aria-hidden="true">
+                <span class="plane">›</span>
+              </div>
+              <div class="airport">
+                <strong>DXB</strong>
+                <span>Dubai</span>
+              </div>
+            </div>
+            <div class="pass-details">
+              <div class="detail"><span>Passenger</span><strong>Michael S.</strong></div>
+              <div class="detail"><span>Seat</span><strong>45C</strong></div>
+              <div class="detail"><span>Cabin</span><strong>Economy</strong></div>
+              <div class="detail"><span>Boarding</span><strong>15:10</strong></div>
+              <div class="detail"><span>Terminal</span><strong>1</strong></div>
+              <div class="detail"><span>Gate</span><strong>—</strong></div>
+            </div>
+            <div class="pass-footer">
+              <div class="barcode" aria-label="Stylized barcode"></div>
+              <div class="wallet-pills" aria-label="Apple Wallet and Google Wallet">
+                <span class="wallet-pill">A</span>
+                <span class="wallet-pill">G</span>
+              </div>
+            </div>
+          </article>
+          <div class="hero-badge">
+            <strong>Adaptive Link</strong>
+            <span>Detects the platform and returns the right pass.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="metric-strip">
+      <div class="metrics shell">
+        <div class="metric">
+          <div class="metric-number">1</div>
+          <p><strong>Flight object</strong>Reusable source of operational data</p>
+        </div>
+        <div class="metric">
+          <div class="metric-number">N</div>
+          <p><strong>Passenger links</strong>One Adaptive Link per passenger</p>
+        </div>
+        <div class="metric">
+          <div class="metric-number">2</div>
+          <p><strong>Wallet platforms</strong>Apple and Google from one flow</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="customer-proof" id="customers">
+      <div class="shell">
+        <div class="customer-proof-head">
+          <h2>Airline day-of-travel experiences powered by Airship.</h2>
+          <p>These customers all use Airship Wallet for boarding passes.</p>
+        </div>
+
+        <div class="logo-ribbon" aria-label="Selected Airship airline customers">
+          <div class="airline-logos">
+            <a class="airline-logo" href="https://www.airship.com/customers/alaska-airlines-mobile-wallet/" target="_blank" rel="noreferrer">
+              <img src="assets/airlines/alaska-airlines.svg" alt="Alaska Airlines">
+              <span>Alaska Airlines</span>
+            </a>
+            <a class="airline-logo" href="https://www.airship.com/customers/hawaiian-airlines/" target="_blank" rel="noreferrer">
+              <img src="assets/airlines/hawaiian-airlines.svg" alt="Hawaiian Airlines">
+              <span>Hawaiian Airlines</span>
+            </a>
+            <a class="airline-logo" href="https://www.airship.com/blog/flying-with-heart-how-southwest-airlines-mobile-strategy-focuses-on-customer-care/" target="_blank" rel="noreferrer">
+              <img src="assets/airlines/southwest-airlines.svg" alt="Southwest Airlines">
+              <span>Southwest Airlines</span>
+            </a>
+            <div class="airline-logo">
+              <img src="assets/airlines/jetblue.svg" alt="JetBlue">
+              <span>JetBlue</span>
+            </div>
+            <div class="airline-logo">
+              <img src="assets/airlines/westjet.svg" alt="WestJet">
+              <span>WestJet</span>
+            </div>
+            <a class="airline-logo" href="https://www.deloitte.com/uk/en/Industries/consumer/case-studies/elevating-virgin-atlantics-guest-journey.html" target="_blank" rel="noreferrer">
+              <img src="assets/airlines/virgin-atlantic.svg" alt="Virgin Atlantic">
+              <span>Virgin Atlantic</span>
+            </a>
+            <div class="airline-logo">
+              <img src="assets/airlines/british-airways.svg" alt="British Airways">
+              <span>British Airways</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-stats">
+          <article class="proof-stat">
+            <span class="stat-value">35%</span>
+            <strong>Alaska Airlines</strong>
+            <p>Year-over-year growth in mobile wallet adoption; a previously reported program snapshot cited 1M+ Wallet passes installed monthly.</p>
+            <a href="https://www.airship.com/customers/alaska-airlines-mobile-wallet/" target="_blank" rel="noreferrer">Airship case study ↗</a>
+            <span aria-hidden="true"> · </span>
+            <a href="https://www.casestudies.com/company/airship/case-study/alaska-airlines-creates-a-seamless-day-of-travel-experience-with-airship" target="_blank" rel="noreferrer">1M+ result ↗</a>
+          </article>
+          <article class="proof-stat">
+            <span class="stat-value">28%</span>
+            <strong>Hawaiian Airlines</strong>
+            <p>Year-over-year increase in mobile wallet adoption after adding Google Wallet passes to its day-of-travel strategy.</p>
+            <a href="https://www.airship.com/blog/3-ways-hawaiian-airlines-transformed-the-day-of-travel-customer-experience/" target="_blank" rel="noreferrer">Read the results ↗</a>
+          </article>
+          <article class="proof-stat">
+            <span class="stat-value">All</span>
+            <strong>Southwest Airlines</strong>
+            <p>Airship Mobile Wallet powers all Southwest mobile boarding passes, including flexible passes for lap children.</p>
+            <a href="https://www.airship.com/blog/flying-with-heart-how-southwest-airlines-mobile-strategy-focuses-on-customer-care/" target="_blank" rel="noreferrer">Customer story ↗</a>
+          </article>
+          <article class="proof-stat">
+            <span class="stat-value">#1</span>
+            <strong>Virgin Atlantic</strong>
+            <p>Its reimagined app ranked first in Travel on the iOS App Store during launch week, with Airship supporting timely travel updates.</p>
+            <a href="https://www.deloitte.com/uk/en/Industries/consumer/case-studies/elevating-virgin-atlantics-guest-journey.html" target="_blank" rel="noreferrer">Partner story ↗</a>
+          </article>
+        </div>
+
+        <div class="semantic-program">
+          <div>
+            <strong>Apple iOS 26 semantic boarding-pass enablement</strong>
+            <small>Current program snapshot supplied for this demo; implementation stage varies by airline.</small>
+          </div>
+          <div class="semantic-airlines" aria-label="Airlines in the semantic boarding pass enablement program">
+            <span>Southwest</span>
+            <span>Alaska</span>
+            <span>JetBlue</span>
+            <span>WestJet</span>
+            <span>Virgin Atlantic</span>
+          </div>
+        </div>
+
+        <p class="proof-footnote">Metrics reflect the linked published sources at time of publication. The 1M+ monthly figure is a previously reported program result; the requested 98% Alaska retention figure was not included because no public source was located. Airline logos are trademarks of their respective owners. See more <a href="https://www.airship.com/customers/?brx_wcybkd%5B%5D=travel-hospitality" target="_blank" rel="noreferrer">travel and hospitality customer stories</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="lifecycle">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">The lifecycle</div>
+            <h2>Model once. Personalize per passenger. Update continuously.</h2>
+          </div>
+          <p>The flight is independent from the passenger. That separation is what lets one operational update propagate across every linked boarding pass.</p>
+        </div>
+
+        <div class="lifecycle" aria-label="Five-step boarding pass lifecycle">
+          <button class="life-step active" type="button" data-api-target="template" aria-label="Show template details">
+            <span class="step-number">01</span>
+            <h3>Design templates</h3>
+            <p>Brand the Apple and Google boarding pass templates in Airship.</p>
+            <span class="endpoint mono">Dashboard / Templates API</span>
+          </button>
+          <button class="life-step" type="button" data-api-target="flight" aria-label="Show create flight API">
+            <span class="step-number">02</span>
+            <h3>Create the flight</h3>
+            <p>Store shared route, schedule, status, and gate data.</p>
+            <span class="endpoint mono">POST /flights</span>
+          </button>
+          <button class="life-step" type="button" data-api-target="link" aria-label="Show Adaptive Link API">
+            <span class="step-number">03</span>
+            <h3>Add passengers</h3>
+            <p>Create passenger objects and receive one Adaptive Link per passenger.</p>
+            <span class="endpoint mono">POST /links/adaptive/multiple</span>
+          </button>
+          <button class="life-step" type="button" data-api-target="delivery" aria-label="Show delivery details">
+            <span class="step-number">04</span>
+            <h3>Deliver one URL</h3>
+            <p>Airship detects the device and serves the platform-appropriate pass.</p>
+            <span class="endpoint mono">Adaptive URL</span>
+          </button>
+          <button class="life-step" type="button" data-api-target="update" aria-label="Show update APIs">
+            <span class="step-number">05</span>
+            <h3>Keep it current</h3>
+            <p>Update the shared flight or one passenger; installed passes refresh.</p>
+            <span class="endpoint mono">PUT flight / POST passenger</span>
+          </button>
+        </div>
+
+        <div class="lifecycle-callout" aria-live="polite">
+          <p id="lifecycle-detail"><strong>Start with two templates.</strong> The template controls design and platform settings; API payloads supply real flight and passenger data.</p>
+          <a class="button secondary" id="lifecycle-link" href="#apis">See API examples</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="architecture">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Solution architecture</div>
+            <h2>Airline systems stay the source of truth. Airship handles the wallet layer.</h2>
+          </div>
+          <p>PNR, check-in, and flight operations feed a platform-neutral model. Airship turns it into signed, hosted, updatable wallet passes.</p>
+        </div>
+
+        <div class="architecture">
+          <div class="system-column">
+            <div class="column-label">Airline systems</div>
+            <div class="system-node in">
+              <strong>Flight operations</strong>
+              <span>Times, gate, terminal, status, route</span>
+            </div>
+            <div class="system-node in">
+              <strong>PNR &amp; check-in</strong>
+              <span>Name, seat, cabin, group, barcode</span>
+            </div>
+          </div>
+
+          <div class="airship-core">
+            <div class="core-title">
+              <strong>Airship Wallet</strong>
+              <span>Managed layer</span>
+            </div>
+            <div class="core-grid">
+              <div class="core-item"><strong>Templates</strong><span>Brand and platform configuration for Apple and Google</span></div>
+              <div class="core-item"><strong>Flight entity</strong><span>Shared operational record referenced by many passes</span></div>
+              <div class="core-item"><strong>Adaptive Links</strong><span>Passenger personalization and device-aware routing</span></div>
+              <div class="core-item"><strong>Pass delivery</strong><span>Generation, signing, hosting, registration, and updates</span></div>
+            </div>
+          </div>
+
+          <div class="system-column">
+            <div class="column-label">Passenger wallets</div>
+            <div class="system-node out">
+              <strong>Apple Wallet</strong>
+              <span>Semantic boarding pass and supported live experiences</span>
+            </div>
+            <div class="system-node out">
+              <strong>Google Wallet</strong>
+              <span>Google boarding pass rendered from its template</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fanout">
+          <article class="fan-card">
+            <h3>Flight-level update</h3>
+            <p>Change shared operational data once.</p>
+            <ul>
+              <li>Gate or terminal change</li>
+              <li>Boarding or departure time</li>
+              <li>Flight status</li>
+              <li>Propagates to linked passes</li>
+            </ul>
+          </article>
+          <svg class="fan-arrow" viewBox="0 0 54 34" fill="none" aria-hidden="true">
+            <path d="M2 17h47M37 4l13 13-13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <article class="fan-card">
+            <h3>Passenger-level update</h3>
+            <p>Change only the affected passenger object.</p>
+            <ul>
+              <li>Seat or cabin assignment</li>
+              <li>Boarding group</li>
+              <li>Barcode or confirmation code</li>
+              <li>Targets the Adaptive Link external ID</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="apis">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">API blueprint</div>
+            <h2>Four calls cover the operational lifecycle.</h2>
+          </div>
+          <p>These examples use placeholders and deliberately contain no credentials. Use Basic Auth or supported OAuth credentials only from a trusted server.</p>
+        </div>
+
+        <div class="automap-note">
+          <span class="automap-icon" aria-hidden="true">A</span>
+          <div>
+            <strong>Standard fields are enough for the refreshed Apple experience.</strong>
+            <span>Airship automatically maps standard boarding-pass fields to iOS 26 semantic tags, so the baseline integration does not need duplicate <code>semantics</code> objects.</span>
+          </div>
+          <a href="https://www.airship.com/docs/whats-new/2025-09-15-boarding-pass-semantics/" target="_blank" rel="noreferrer">Semantic auto-mapping ↗</a>
+        </div>
+
+        <div class="api-layout">
+          <div class="api-tabs" role="tablist" aria-label="API examples">
+            <button class="api-tab active" id="tab-flight" role="tab" aria-selected="true" aria-controls="panel-flight" data-tab="flight" type="button">
+              <span class="tab-index">01</span>
+              <span><strong>Create flight</strong><small>Shared operational data</small></span>
+            </button>
+            <button class="api-tab" id="tab-link" role="tab" aria-selected="false" aria-controls="panel-link" data-tab="link" type="button">
+              <span class="tab-index">02</span>
+              <span><strong>Create link</strong><small>Flight + passenger</small></span>
+            </button>
+            <button class="api-tab" id="tab-flight-update" role="tab" aria-selected="false" aria-controls="panel-flight-update" data-tab="flight-update" type="button">
+              <span class="tab-index">03</span>
+              <span><strong>Update flight</strong><small>Fan out to all passes</small></span>
+            </button>
+            <button class="api-tab" id="tab-passenger-update" role="tab" aria-selected="false" aria-controls="panel-passenger-update" data-tab="passenger-update" type="button">
+              <span class="tab-index">04</span>
+              <span><strong>Update passenger</strong><small>Target one boarding pass</small></span>
+            </button>
+          </div>
+
+          <div>
+            <article class="code-panel" id="panel-flight" role="tabpanel" aria-labelledby="tab-flight">
+              <div class="code-toolbar">
+                <div class="code-title">
+                  <strong>Create a reusable flight</strong>
+                  <span>POST /v1/flights/project/{projectId}</span>
+                </div>
+                <button class="copy-button" type="button" data-copy="code-flight">Copy</button>
+              </div>
+              <pre><code id="code-flight">POST https://wallet-api.urbanairship.com/v1/flights/project/{projectId}
+Authorization: Basic &lt;base64(appKey:secret)&gt;
+Api-Revision: 1.2
+Content-Type: application/json
+
+{
+  "externalId": "EK50-2026-10-06",
+  "fields": {
+    "flightNumber": { "value": "50" },
+    "airlineCode": { "value": "EK" },
+    "airlineName": { "value": "Emirates" },
+    "departureAirport": { "value": "MUC", "label": "Munich" },
+    "arrivalAirport": { "value": "DXB", "label": "Dubai" },
+    "departureTerminal": { "value": "1" },
+    "departureTime": { "value": "2026-10-06T15:40:00+02:00" },
+    "arrivalTime": { "value": "2026-10-06T23:45:00+04:00" },
+    "flightStatus": { "value": "scheduled" }
+  }
+}</code></pre>
+              <div class="code-note">
+                <span>Response: store the returned <code>flightId</code> or your <code>flightExternalId</code>.</span>
+                <a href="https://www.airship.com/docs/developer/rest-api/wallet/operations/flights/" target="_blank" rel="noreferrer">Flights API ↗</a>
+              </div>
+            </article>
+
+            <article class="code-panel" id="panel-link" role="tabpanel" aria-labelledby="tab-link" hidden>
+              <div class="code-toolbar">
+                <div class="code-title">
+                  <strong>Create passenger Adaptive Links</strong>
+                  <span>POST /v1/links/adaptive/multiple/project/id/{projectExternalId}</span>
+                </div>
+                <button class="copy-button" type="button" data-copy="code-link">Copy</button>
+              </div>
+              <pre><code id="code-link">POST https://wallet-api.urbanairship.com/v1/links/adaptive/multiple/project/id/{projectExternalId}
+Authorization: Basic &lt;base64(appKey:secret)&gt;
+Api-Revision: 1.2
+Content-Type: application/json
+
+{
+  "iosTemplateExternalId": "emirates-apple",
+  "androidTemplateExternalId": "emirates-google",
+  "availablePasses": 1,
+  "payload": {
+    "flights": [
+      {
+        "flightId": "{flightId}",
+        "passengers": [
+          {
+            "adaptiveLinkExternalId": "PNR-EKMUC5-MICHAEL",
+            "fields": {
+              "passengerName": { "value": "Michael Schoenacher" },
+              "seatNumber": { "value": "48A" },
+              "seatClass": { "value": "Economy" },
+              "boardingGroup": { "value": "B" },
+              "confirmationCode": { "value": "EKMUC5" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+              <div class="code-note">
+                <span>Response: one platform-aware URL per passenger object.</span>
+                <a href="https://www.airship.com/docs/developer/rest-api/wallet/operations/adaptive-links/" target="_blank" rel="noreferrer">Adaptive Links API ↗</a>
+              </div>
+            </article>
+
+            <article class="code-panel" id="panel-flight-update" role="tabpanel" aria-labelledby="tab-flight-update" hidden>
+              <div class="code-toolbar">
+                <div class="code-title">
+                  <strong>Update shared flight data</strong>
+                  <span>PUT /v1/flights/project/{projectId}/{flightId}</span>
+                </div>
+                <button class="copy-button" type="button" data-copy="code-flight-update">Copy</button>
+              </div>
+              <pre><code id="code-flight-update">PUT https://wallet-api.urbanairship.com/v1/flights/project/{projectId}/{flightId}
+Authorization: Basic &lt;base64(appKey:secret)&gt;
+Api-Revision: 1.2
+Content-Type: application/json
+
+{
+  "fields": {
+    "departureGate": {
+      "value": "H25",
+      "label": "Gate",
+      "changeMessage": "Gate changed to %@"
+    }
+  }
+}</code></pre>
+              <div class="code-note">
+                <span>Only send changed fields. Linked boarding passes receive the updated flight data.</span>
+                <a href="https://www.airship.com/docs/guides/wallet/user-guide/updating-passes/about/" target="_blank" rel="noreferrer">Updating passes ↗</a>
+              </div>
+            </article>
+
+            <article class="code-panel" id="panel-passenger-update" role="tabpanel" aria-labelledby="tab-passenger-update" hidden>
+              <div class="code-toolbar">
+                <div class="code-title">
+                  <strong>Update one passenger object</strong>
+                  <span>POST /v1/links/adaptive/multiple/project/id/{projectExternalId}</span>
+                </div>
+                <button class="copy-button" type="button" data-copy="code-passenger-update">Copy</button>
+              </div>
+              <pre><code id="code-passenger-update">POST https://wallet-api.urbanairship.com/v1/links/adaptive/multiple/project/id/{projectExternalId}
+Authorization: Basic &lt;base64(appKey:secret)&gt;
+Api-Revision: 1.2
+Content-Type: application/json
+
+{
+  "iosTemplateExternalId": "emirates-apple",
+  "androidTemplateExternalId": "emirates-google",
+  "payload": {
+    "flights": [
+      {
+        "flightId": "{flightId}",
+        "passengers": [
+          {
+            "adaptiveLinkExternalId": "PNR-EKMUC5-MICHAEL",
+            "fields": {
+              "seatNumber": { "value": "45C" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+              <div class="code-note">
+                <span>Existing <code>flightId</code> + passenger <code>adaptiveLinkExternalId</code> turns the POST into an update.</span>
+                <a href="https://www.airship.com/docs/guides/wallet/user-guide/create-links/flights-boarding-passes/#modifying-looking-up-and-deleting-boarding-passes" target="_blank" rel="noreferrer">Update guidance ↗</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="comparison">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Build vs. Airship</div>
+            <h2>Keep airline logic. Avoid rebuilding wallet infrastructure.</h2>
+          </div>
+          <p>Airship does not replace flight operations or check-in. It removes the platform plumbing between those systems and the passenger’s wallet.</p>
+        </div>
+
+        <div class="platform-advantages">
+          <article class="platform-advantage">
+            <span class="advantage-number">01</span>
+            <div>
+              <h3>Apple semantics, automatically mapped</h3>
+              <p>Airship provides Day 1 support and maps existing standard boarding-pass fields to iOS 26 semantic tags — enabling the refreshed pass experience without duplicating data in the baseline API payload.</p>
+              <a href="https://www.airship.com/docs/whats-new/2025-09-15-boarding-pass-semantics/" target="_blank" rel="noreferrer">See semantic-tag support ↗</a>
+            </div>
+          </article>
+          <article class="platform-advantage">
+            <span class="advantage-number">02</span>
+            <div>
+              <h3>Google Wallet passes that travel together</h3>
+              <p>Auto Linked Passes can connect an Emirates boarding pass with the traveler’s Emirates Skywards membership card, so Google Wallet groups both together without a second save or install step.</p>
+              <a href="https://www.airship.com/docs/whats-new/2026-05-11-google-wallet-auto-linked-passes/" target="_blank" rel="noreferrer">See Auto Linked Passes ↗</a>
+            </div>
+          </article>
+          <article class="platform-advantage">
+            <span class="advantage-number">03</span>
+            <div>
+              <h3>One link for the whole journey</h3>
+              <p>Multi-Pass Adaptive Links bundle up to 10 passes into one URL — especially useful for multi-flight and connecting itineraries, as well as family or group travel.</p>
+              <a href="https://www.airship.com/docs/whats-new/2024-12-03-wallet-multi-pass-adaptive-links/" target="_blank" rel="noreferrer">See Multi-Pass Adaptive Links ↗</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="comparison-wrap" role="region" aria-label="Comparison of Airship and an in-house wallet implementation" tabindex="0">
+          <div class="comparison-head">
+            <div><span>Capability</span><strong>What must happen</strong></div>
+            <div class="airship-col"><span>With Airship</span><strong>Managed wallet layer</strong></div>
+            <div class="build-col"><span>Build in-house</span><strong>Airline owns the full stack</strong></div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Cross-platform delivery</div>
+            <div class="comparison-airship"><span class="check">✓</span>One Adaptive Link detects Apple or Google and returns the right pass.</div>
+            <div class="comparison-build">Create and maintain separate Apple and Google issuance flows and customer links.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Pass generation &amp; hosting</div>
+            <div class="comparison-airship"><span class="check">✓</span>Templates, pass generation, signing, hosting, and download endpoints are provided.</div>
+            <div class="comparison-build">Implement PKPass generation/signing and Google Wallet object creation, plus resilient hosting.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Update delivery</div>
+            <div class="comparison-airship"><span class="check">✓</span>Update Airship’s flight or passenger object; Airship handles wallet update delivery.</div>
+            <div class="comparison-build">Operate Apple device registration/web-service endpoints, APNs update pushes, Google updates, retries, and state.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Flight fan-out</div>
+            <div class="comparison-airship"><span class="check">✓</span>One shared flight record propagates gate, time, and status changes to linked passes.</div>
+            <div class="comparison-build">Build your own mapping from flights to every issued pass and maintain fan-out jobs.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Passenger personalization</div>
+            <div class="comparison-airship"><span class="check">✓</span>Passenger objects sit inside the Adaptive Link payload and retain external IDs for updates.</div>
+            <div class="comparison-build">Design identity, pass lookup, serialization, and update targeting across both ecosystems.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Apple semantic boarding passes</div>
+            <div class="comparison-airship"><span class="check">✓</span>Day 1 support plus automatic mapping from standard boarding-pass fields to semantic tags.</div>
+            <div class="comparison-build">Map and maintain Apple’s semantic schema, version behavior, and new UI capabilities yourself.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Google companion passes</div>
+            <div class="comparison-airship"><span class="check">✓</span>Auto-link the boarding pass and Emirates Skywards card so Google Wallet presents them together.</div>
+            <div class="comparison-build">Implement pass-association logic and additional-pass distribution against Google’s evolving APIs.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Multi-flight journey distribution</div>
+            <div class="comparison-airship"><span class="check">✓</span>Deliver up to 10 boarding passes for connecting flights — or passes for a group — from one Multi-Pass Adaptive Link.</div>
+            <div class="comparison-build">Build itinerary-level bundle orchestration, cross-pass lookup, platform routing, and a combined download experience.</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-topic">Operations &amp; support</div>
+            <div class="comparison-airship"><span class="check">✓</span>One vendor API, dashboard, documentation set, and support path for wallet delivery.</div>
+            <div class="comparison-build">Own 24/7 reliability, observability, security reviews, platform certification issues, and specialist knowledge.</div>
+          </div>
+        </div>
+
+        <div class="ownership">
+          <article class="ownership-card airship">
+            <h3>Airship simplifies</h3>
+            <ul>
+              <li>Apple and Google template management</li>
+              <li>Adaptive platform routing</li>
+              <li>Pass generation and hosting</li>
+              <li>Wallet registration and update delivery</li>
+              <li>Shared flight update propagation</li>
+              <li>Apple semantic field auto-mapping</li>
+              <li>Google Auto Linked Passes</li>
+              <li>Multi-Pass Adaptive Links</li>
+            </ul>
+          </article>
+          <article class="ownership-card airline">
+            <h3>The airline still owns</h3>
+            <ul>
+              <li>Authoritative flight and passenger data</li>
+              <li>Check-in and seat assignment rules</li>
+              <li>Issuer accounts, certificates, and credentials</li>
+              <li>Privacy, consent, security, and retention</li>
+              <li>Brand decisions and passenger messaging</li>
+              <li>Release validation on supported devices</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="docs">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Official references</div>
+            <h2>Go from the story to the specification.</h2>
+          </div>
+          <p>The lifecycle and API structure on this page are based on Airship’s Wallet documentation. Always confirm schemas and supported behavior against the current reference.</p>
+        </div>
+        <div class="docs-grid">
+          <a class="doc-link" href="https://www.airship.com/docs/guides/wallet/user-guide/create-links/flights-boarding-passes/" target="_blank" rel="noreferrer">
+            <span>User guide</span>
+            <strong>Flights and boarding passes</strong>
+            <i>↗</i>
+          </a>
+          <a class="doc-link" href="https://www.airship.com/docs/developer/rest-api/wallet/operations/flights/" target="_blank" rel="noreferrer">
+            <span>Wallet API</span>
+            <strong>Flight operations</strong>
+            <i>↗</i>
+          </a>
+          <a class="doc-link" href="https://www.airship.com/docs/developer/rest-api/wallet/operations/adaptive-links/" target="_blank" rel="noreferrer">
+            <span>Wallet API</span>
+            <strong>Adaptive Links</strong>
+            <i>↗</i>
+          </a>
+          <a class="doc-link" href="https://www.airship.com/docs/developer/rest-api/wallet/schemas/flights-and-boarding-passes/" target="_blank" rel="noreferrer">
+            <span>Schema reference</span>
+            <strong>Flight and boarding pass objects</strong>
+            <i>↗</i>
+          </a>
+          <a class="doc-link" href="https://www.airship.com/docs/whats-new/2024-12-03-wallet-multi-pass-adaptive-links/" target="_blank" rel="noreferrer">
+            <span>Distribution</span>
+            <strong>Multi-Pass Adaptive Links</strong>
+            <i>↗</i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="closing-grid shell">
+        <div>
+          <h2>Build the airline experience — not the wallet plumbing.</h2>
+          <p>Airship gives Emirates a maintained delivery layer for dynamic Apple and Google wallet passes while airline systems remain authoritative for the journey.</p>
+        </div>
+        <a class="button" href="https://www.airship.com/docs/guides/wallet/user-guide/create-links/flights-boarding-passes/" target="_blank" rel="noreferrer">Read the full guide ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid shell">
+      <span>Demo architecture · Airship Wallet boarding passes</span>
+      <span>Examples are illustrative. Never expose Wallet API credentials in client-side code.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    (() => {
+      const apiTabs = [...document.querySelectorAll(".api-tab")];
+      const panels = [...document.querySelectorAll(".code-panel")];
+      const lifeSteps = [...document.querySelectorAll(".life-step")];
+      const lifecycleDetail = document.getElementById("lifecycle-detail");
+      const lifecycleLink = document.getElementById("lifecycle-link");
+      const toast = document.getElementById("toast");
+
+      const lifecycleCopy = {
+        template: {
+          text: "<strong>Start with two templates.</strong> The template controls design and platform settings; API payloads supply real flight and passenger data.",
+          tab: "flight"
+        },
+        flight: {
+          text: "<strong>Create shared flight data once.</strong> Airship returns a flight ID that every passenger boarding pass can reference.",
+          tab: "flight"
+        },
+        link: {
+          text: "<strong>Add one passenger object per pass holder.</strong> Each passenger receives an Adaptive Link external ID and a device-aware URL.",
+          tab: "link"
+        },
+        delivery: {
+          text: "<strong>Distribute a single URL.</strong> Airship detects Apple or Google and serves the correct pass from the matching template.",
+          tab: "link"
+        },
+        update: {
+          text: "<strong>Choose the right update scope.</strong> Update the flight for shared operational changes, or the passenger object for seat and cabin changes.",
+          tab: "passenger-update"
+        }
+      };
+
+      function activateTab(name, shouldScroll = false) {
+        apiTabs.forEach((tab) => {
+          const active = tab.dataset.tab === name;
+          tab.classList.toggle("active", active);
+          tab.setAttribute("aria-selected", String(active));
+          tab.tabIndex = active ? 0 : -1;
+        });
+
+        panels.forEach((panel) => {
+          panel.hidden = panel.id !== `panel-${name}`;
+        });
+
+        if (shouldScroll) {
+          document.getElementById("apis").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      apiTabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+        tab.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+          event.preventDefault();
+          const direction = ["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1;
+          const next = apiTabs[(index + direction + apiTabs.length) % apiTabs.length];
+          next.focus();
+          activateTab(next.dataset.tab);
+        });
+      });
+
+      lifeSteps.forEach((step) => {
+        step.addEventListener("click", () => {
+          lifeSteps.forEach((item) => item.classList.toggle("active", item === step));
+          const content = lifecycleCopy[step.dataset.apiTarget];
+          lifecycleDetail.innerHTML = content.text;
+          lifecycleLink.onclick = (event) => {
+            event.preventDefault();
+            activateTab(content.tab, true);
+          };
+        });
+      });
+
+      document.querySelectorAll(".copy-button").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const source = document.getElementById(button.dataset.copy);
+          const text = source.textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch {
+            const area = document.createElement("textarea");
+            area.value = text;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand("copy");
+            area.remove();
+          }
+          button.textContent = "Copied";
+          toast.classList.add("show");
+          window.setTimeout(() => {
+            button.textContent = "Copy";
+            toast.classList.remove("show");
+          }, 1500);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
