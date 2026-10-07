@@ -439,6 +439,58 @@
       font-size: 11px;
     }
 
+    .real-pass-stack {
+      min-height: 570px;
+    }
+
+    .hero-phone {
+      position: absolute;
+      z-index: 2;
+      top: -24px;
+      right: 72px;
+      width: min(285px, 68%);
+      margin: 0;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: var(--surface);
+      box-shadow: 0 28px 70px rgba(16, 24, 40, 0.22);
+      transform: rotate(-2deg);
+    }
+
+    .hero-phone img {
+      width: 100%;
+      display: block;
+      border-radius: 27px;
+    }
+
+    .hero-phone figcaption {
+      position: absolute;
+      top: 28px;
+      left: -94px;
+      width: 130px;
+      padding: 11px 13px;
+      border: 1px solid var(--ink);
+      border-radius: 10px;
+      background: var(--surface);
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.35;
+      transform: rotate(-3deg);
+    }
+
+    .real-pass-stack .pass-shadow {
+      inset: 54px 20px 22px 92px;
+      background: linear-gradient(145deg, #f7d9d9, var(--amber-soft));
+      transform: rotate(5deg);
+    }
+
+    .real-pass-stack .hero-badge {
+      z-index: 3;
+      right: 0;
+      bottom: 12px;
+    }
+
     .metric-strip {
       border-block: 1px solid var(--line);
       background: var(--surface);
@@ -479,6 +531,141 @@
     .metric strong {
       display: block;
       color: var(--ink);
+    }
+
+    .passenger-experience {
+      background: var(--surface-soft);
+    }
+
+    .pass-update-proof {
+      display: grid;
+      grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1.45fr);
+      gap: 42px;
+      align-items: center;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+    }
+
+    .pass-update-copy h3 {
+      margin-bottom: 12px;
+      font-size: 28px;
+      letter-spacing: -0.035em;
+    }
+
+    .pass-update-copy p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .update-flow {
+      display: grid;
+      gap: 11px;
+      margin-top: 24px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .update-flow li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      font-size: 12px;
+    }
+
+    .update-flow span {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: white;
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .pass-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .phone-shot {
+      margin: 0;
+    }
+
+    .phone-shot a {
+      display: block;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: #eef0f4;
+      box-shadow: 0 18px 34px rgba(16, 24, 40, 0.13);
+    }
+
+    .phone-shot img {
+      width: 100%;
+      display: block;
+    }
+
+    .phone-shot figcaption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .phone-shot figcaption strong {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .update-arrow {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--red);
+      color: white;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .iphone-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .iphone-gallery .phone-shot {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .iphone-gallery .phone-shot a {
+      border-radius: 17px;
+      box-shadow: none;
+    }
+
+    .iphone-gallery .phone-shot figcaption {
+      min-height: 54px;
+      text-align: left;
+    }
+
+    .screenshot-note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: right;
     }
 
     .customer-proof {
@@ -1687,6 +1874,18 @@
         gap: 18px;
       }
 
+      .pass-update-proof {
+        grid-template-columns: 1fr;
+      }
+
+      .pass-update-copy {
+        max-width: 680px;
+      }
+
+      .iphone-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .pass-types-layout {
         grid-template-columns: 1fr;
       }
@@ -1775,6 +1974,25 @@
         min-height: 410px;
       }
 
+      .real-pass-stack {
+        min-height: 515px;
+      }
+
+      .hero-phone {
+        top: 0;
+        right: 50%;
+        width: min(260px, 72%);
+        transform: translateX(50%) rotate(-2deg);
+      }
+
+      .hero-phone figcaption {
+        display: none;
+      }
+
+      .real-pass-stack .pass-shadow {
+        inset: 45px 28px 18px;
+      }
+
       .boarding-pass {
         right: 16px;
       }
@@ -1782,6 +2000,37 @@
       .pass-shadow,
       .hero-badge {
         display: none;
+      }
+
+      .real-pass-stack .hero-badge {
+        display: block;
+        right: 8px;
+      }
+
+      .pass-update-proof {
+        padding: 24px 18px;
+      }
+
+      .pass-comparison {
+        gap: 8px;
+      }
+
+      .update-arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 17px;
+      }
+
+      .iphone-gallery {
+        display: flex;
+        padding-bottom: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+      }
+
+      .iphone-gallery .phone-shot {
+        min-width: 235px;
+        scroll-snap-align: start;
       }
 
       .route {
@@ -1987,48 +2236,15 @@
           </div>
         </div>
 
-        <div class="pass-stack" aria-label="Illustration of an Emirates boarding pass from Munich to Dubai">
+        <div class="pass-stack real-pass-stack" aria-label="Real Emirates semantic boarding pass on iPhone">
           <div class="pass-shadow"></div>
-          <article class="boarding-pass">
-            <div class="pass-top">
-              <div>
-                <div class="airline">Emirates</div>
-                <small class="mono">EK 50 · BOARDING PASS</small>
-              </div>
-              <span class="pass-chip">Live</span>
-            </div>
-            <div class="route">
-              <div class="airport">
-                <strong>MUC</strong>
-                <span>Munich</span>
-              </div>
-              <div class="flight-path" aria-hidden="true">
-                <span class="plane">›</span>
-              </div>
-              <div class="airport">
-                <strong>DXB</strong>
-                <span>Dubai</span>
-              </div>
-            </div>
-            <div class="pass-details">
-              <div class="detail"><span>Passenger</span><strong>Michael S.</strong></div>
-              <div class="detail"><span>Seat</span><strong>45C</strong></div>
-              <div class="detail"><span>Cabin</span><strong>Economy</strong></div>
-              <div class="detail"><span>Boarding</span><strong>15:10</strong></div>
-              <div class="detail"><span>Terminal</span><strong>1</strong></div>
-              <div class="detail"><span>Gate</span><strong>—</strong></div>
-            </div>
-            <div class="pass-footer">
-              <div class="barcode" aria-label="Stylized barcode"></div>
-              <div class="wallet-pills" aria-label="Apple Wallet and Google Wallet">
-                <span class="wallet-pill">A</span>
-                <span class="wallet-pill">G</span>
-              </div>
-            </div>
-          </article>
+          <figure class="hero-phone">
+            <img src="assets/screenshots/pass-business.jpg" alt="Emirates EK903 semantic boarding pass in Apple Wallet showing Business seat 8K">
+            <figcaption>Real iOS 26 semantic boarding pass from this demo</figcaption>
+          </figure>
           <div class="hero-badge">
-            <strong>Adaptive Link</strong>
-            <span>Detects the platform and returns the right pass.</span>
+            <strong>Live demo result</strong>
+            <span>Generated and updated through Airship Wallet.</span>
           </div>
         </div>
       </div>
@@ -2185,6 +2401,86 @@
           <p id="lifecycle-detail">Start with two templates. The template controls design and platform settings, and the API payload supplies the real flight and passenger data.</p>
           <a class="button secondary" id="lifecycle-link" href="#apis">See API examples</a>
         </div>
+      </div>
+    </section>
+
+    <section class="section passenger-experience" id="experience">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Captured on iPhone</div>
+            <h2>What the passenger actually sees.</h2>
+          </div>
+          <p>These screenshots come from the EK903 demo pass. They show the semantic boarding pass, an upgrade update, Apple’s Live Activity and contextual travel actions.</p>
+        </div>
+
+        <div class="pass-update-proof">
+          <div class="pass-update-copy">
+            <h3>One passenger update changes the pass.</h3>
+            <p>The passenger object moved from Economy seat 48A to Business seat 8K. The pass refreshed without the passenger downloading it again.</p>
+            <ol class="update-flow">
+              <li><span>1</span><div>Update seat, cabin and semantic fare data on the existing passenger.</div></li>
+              <li><span>2</span><div>Airship delivers the update to the installed wallet pass.</div></li>
+              <li><span>3</span><div>Apple refreshes the pass and its Live Activity.</div></li>
+            </ol>
+          </div>
+
+          <div class="pass-comparison" aria-label="Boarding pass before and after a Business upgrade">
+            <figure class="phone-shot">
+              <a href="assets/screenshots/pass-economy.jpg" target="_blank">
+                <img src="assets/screenshots/pass-economy.jpg" loading="lazy" alt="EK903 pass before the update, showing Economy seat 48A">
+              </a>
+              <figcaption><strong>Before</strong>Economy · Seat 48A</figcaption>
+            </figure>
+            <span class="update-arrow" aria-hidden="true">→</span>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/pass-business.jpg" target="_blank">
+                <img src="assets/screenshots/pass-business.jpg" loading="lazy" alt="EK903 pass after the update, showing Business seat 8K">
+              </a>
+              <figcaption><strong>After</strong>Business · Seat 8K</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="iphone-gallery" aria-label="iPhone boarding pass experience screenshots">
+          <figure class="phone-shot">
+            <a href="assets/screenshots/live-activity-boarding.jpg" target="_blank">
+              <img src="assets/screenshots/live-activity-boarding.jpg" loading="lazy" alt="EK903 Live Activity showing walking time to the gate">
+            </a>
+            <figcaption><strong>On the way to the gate</strong>Live Activity surfaces terminal, gate and walking time.</figcaption>
+          </figure>
+          <figure class="phone-shot">
+            <a href="assets/screenshots/seat-change-message.jpg" target="_blank">
+              <img src="assets/screenshots/seat-change-message.jpg" loading="lazy" alt="Apple Wallet notification stating seat changed to 8K">
+            </a>
+            <figcaption><strong>Automatic seat alert</strong>Apple recognises the semantic seat change.</figcaption>
+          </figure>
+          <figure class="phone-shot">
+            <a href="assets/screenshots/upgrade-message.jpg" target="_blank">
+              <img src="assets/screenshots/upgrade-message.jpg" loading="lazy" alt="Custom notification stating the passenger was upgraded to Business seat 8K">
+            </a>
+            <figcaption><strong>Custom upgrade message</strong>A separate update delivers the Business upgrade alert.</figcaption>
+          </figure>
+          <figure class="phone-shot">
+            <a href="assets/screenshots/live-activity-boarding-now.jpg" target="_blank">
+              <img src="assets/screenshots/live-activity-boarding-now.jpg" loading="lazy" alt="EK903 Live Activity displaying Boarding Now">
+            </a>
+            <figcaption><strong>Boarding now</strong>The lock-screen state changes as the journey progresses.</figcaption>
+          </figure>
+          <figure class="phone-shot">
+            <a href="assets/screenshots/live-activity-airborne.jpg" target="_blank">
+              <img src="assets/screenshots/live-activity-airborne.jpg" loading="lazy" alt="EK903 Live Activity displaying in-flight progress from Dubai to Amman">
+            </a>
+            <figcaption><strong>In flight</strong>Progress, arrival terminal and baggage information remain visible.</figcaption>
+          </figure>
+          <figure class="phone-shot">
+            <a href="assets/screenshots/airport-map.jpg" target="_blank">
+              <img src="assets/screenshots/airport-map.jpg" loading="lazy" alt="Apple Maps view of Dubai International Airport opened from the boarding pass">
+            </a>
+            <figcaption><strong>Contextual airport actions</strong>The pass links passengers to maps, directions and airport details.</figcaption>
+          </figure>
+        </div>
+        <p class="screenshot-note">Screenshots captured on iPhone from the Airship-powered EK903 demo on 7 October 2026.</p>
       </div>
     </section>
 
