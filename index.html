@@ -651,6 +651,7 @@
       border-radius: 24px;
       background: #eef0f4;
       box-shadow: 0 18px 34px rgba(16, 24, 40, 0.13);
+      cursor: zoom-in;
     }
 
     .phone-shot img {
@@ -712,6 +713,79 @@
       color: var(--muted);
       font-size: 11px;
       text-align: right;
+    }
+
+    .screenshot-modal {
+      max-width: none;
+      max-height: none;
+      margin: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      overflow: visible;
+    }
+
+    .screenshot-modal::backdrop {
+      background: rgba(13, 18, 26, 0.82);
+      backdrop-filter: blur(8px);
+    }
+
+    .screenshot-modal-frame {
+      position: relative;
+      margin: 0;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 30px;
+      background: #151a22;
+      box-shadow: 0 38px 100px rgba(0, 0, 0, 0.58);
+    }
+
+    .screenshot-modal img {
+      width: auto;
+      max-width: min(88vw, 620px);
+      max-height: 82vh;
+      display: block;
+      border-radius: 21px;
+    }
+
+    .screenshot-modal figcaption {
+      max-width: min(88vw, 620px);
+      padding: 13px 48px 7px 8px;
+      color: #c8d0dc;
+      font-size: 12px;
+    }
+
+    .screenshot-modal figcaption strong {
+      display: block;
+      margin-bottom: 2px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .screenshot-modal-close {
+      position: absolute;
+      z-index: 2;
+      right: 18px;
+      bottom: 14px;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      background: #2b3340;
+      color: white;
+      font: inherit;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .screenshot-modal-close:hover,
+    .screenshot-modal-close:focus-visible {
+      background: var(--red);
+      outline: 2px solid white;
+      outline-offset: 2px;
     }
 
     .customer-proof {
@@ -3113,6 +3187,14 @@ Content-Type: application/json
 
   <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard</div>
 
+  <dialog class="screenshot-modal" id="screenshot-modal" aria-label="Screenshot preview">
+    <figure class="screenshot-modal-frame">
+      <img id="screenshot-modal-image" alt="">
+      <figcaption id="screenshot-modal-caption"></figcaption>
+      <button class="screenshot-modal-close" type="button" aria-label="Close screenshot preview">×</button>
+    </figure>
+  </dialog>
+
   <script>
     (() => {
       const apiTabs = [...document.querySelectorAll(".api-tab")];
@@ -3120,6 +3202,10 @@ Content-Type: application/json
       const lifeSteps = [...document.querySelectorAll(".life-step")];
       const experienceTabs = [...document.querySelectorAll(".experience-tab")];
       const experiencePanels = [...document.querySelectorAll(".experience-panel")];
+      const screenshotModal = document.getElementById("screenshot-modal");
+      const screenshotModalImage = document.getElementById("screenshot-modal-image");
+      const screenshotModalCaption = document.getElementById("screenshot-modal-caption");
+      const screenshotModalClose = screenshotModal.querySelector(".screenshot-modal-close");
       const lifecycleDetail = document.getElementById("lifecycle-detail");
       const lifecycleLink = document.getElementById("lifecycle-link");
       const toast = document.getElementById("toast");
@@ -3199,6 +3285,27 @@ Content-Type: application/json
           next.focus();
           activateExperience(next.dataset.experience);
         });
+      });
+
+      document.querySelectorAll(".experience-panel .phone-shot a").forEach((link) => {
+        link.removeAttribute("target");
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const image = link.querySelector("img");
+          const caption = link.closest(".phone-shot").querySelector("figcaption");
+          screenshotModalImage.src = link.href;
+          screenshotModalImage.alt = image.alt;
+          screenshotModalCaption.innerHTML = caption.innerHTML;
+          screenshotModal.showModal();
+        });
+      });
+
+      screenshotModalClose.addEventListener("click", () => screenshotModal.close());
+      screenshotModal.addEventListener("click", (event) => {
+        if (event.target === screenshotModal) screenshotModal.close();
+      });
+      screenshotModal.addEventListener("close", () => {
+        screenshotModalImage.removeAttribute("src");
       });
 
       lifeSteps.forEach((step) => {
