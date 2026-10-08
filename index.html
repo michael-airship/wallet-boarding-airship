@@ -178,6 +178,26 @@
       color: white !important;
     }
 
+    .wallet-add-button {
+      display: inline-flex;
+      border-radius: 12px;
+      outline-offset: 4px;
+      transition: transform 160ms ease, filter 160ms ease;
+    }
+
+    .wallet-add-button:hover,
+    .wallet-add-button:focus-visible {
+      filter: drop-shadow(0 8px 14px rgba(24, 24, 22, 0.22));
+      outline: 3px solid var(--red);
+      transform: translateY(-2px);
+    }
+
+    .wallet-add-button img {
+      display: block;
+      width: 252px;
+      height: auto;
+    }
+
     .hero {
       padding: 88px 0 70px;
       overflow: hidden;
@@ -537,6 +557,52 @@
       background: var(--surface-soft);
     }
 
+    .experience-tabs {
+      width: fit-content;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(170px, 1fr));
+      gap: 5px;
+      margin-bottom: 22px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .experience-tab {
+      min-height: 46px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .experience-tab:hover,
+    .experience-tab:focus-visible {
+      color: var(--ink);
+      outline: 2px solid var(--teal);
+      outline-offset: 1px;
+    }
+
+    .experience-tab.active {
+      background: var(--ink);
+      color: white;
+      outline: none;
+    }
+
+    .experience-panel[hidden] {
+      display: none;
+    }
+
+    .experience-panel.google .update-arrow {
+      background: #16894f;
+    }
+
     .pass-update-proof {
       display: grid;
       grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1.45fr);
@@ -637,26 +703,26 @@
       font-weight: 800;
     }
 
-    .iphone-gallery {
+    .wallet-gallery {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
       margin-top: 20px;
     }
 
-    .iphone-gallery .phone-shot {
+    .wallet-gallery .phone-shot {
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--surface);
     }
 
-    .iphone-gallery .phone-shot a {
+    .wallet-gallery .phone-shot a {
       border-radius: 17px;
       box-shadow: none;
     }
 
-    .iphone-gallery .phone-shot figcaption {
+    .wallet-gallery .phone-shot figcaption {
       min-height: 54px;
       text-align: left;
     }
@@ -1882,7 +1948,7 @@
         max-width: 680px;
       }
 
-      .iphone-gallery {
+      .wallet-gallery {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -2011,6 +2077,15 @@
         padding: 24px 18px;
       }
 
+      .experience-tabs {
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .experience-tab {
+        padding-inline: 10px;
+      }
+
       .pass-comparison {
         gap: 8px;
       }
@@ -2021,14 +2096,14 @@
         font-size: 17px;
       }
 
-      .iphone-gallery {
+      .wallet-gallery {
         display: flex;
         padding-bottom: 12px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
       }
 
-      .iphone-gallery .phone-shot {
+      .wallet-gallery .phone-shot {
         min-width: 235px;
         scroll-snap-align: start;
       }
@@ -2224,6 +2299,9 @@
           <h1>One flight record becomes a boarding pass in every passenger’s wallet.</h1>
           <p>Airship stores the flight once and provides one Adaptive Link per passenger. The link detects Apple or Google, returns the right pass and keeps it current as the flight changes.</p>
           <div class="hero-actions">
+            <a class="wallet-add-button" href="https://wallet-api.urbanairship.com/v1/pass/adaptive/8THpXTyfJHh" aria-label="Add the EK903 boarding pass to Apple Wallet or Google Wallet">
+              <img src="assets/add-to-wallet.svg" alt="Add to Wallet — Apple and Google">
+            </a>
             <a class="button" href="#lifecycle">Explore the lifecycle</a>
             <a class="button secondary" href="#comparison">Why Airship</a>
           </div>
@@ -2408,79 +2486,150 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Captured on iPhone</div>
+            <div class="eyebrow">Captured on iPhone and Android</div>
             <h2>What the passenger actually sees.</h2>
           </div>
-          <p>These screenshots come from the EK903 demo pass. They show the semantic boarding pass, an upgrade update, Apple’s Live Activity and contextual travel actions.</p>
+          <p>These screenshots come from the same EK903 Adaptive Link. Switch between Apple Wallet and Google Wallet to compare the passenger experience.</p>
         </div>
 
-        <div class="pass-update-proof">
-          <div class="pass-update-copy">
-            <h3>One passenger update changes the pass.</h3>
-            <p>The passenger object moved from Economy seat 48A to Business seat 8K. The pass refreshed without the passenger downloading it again.</p>
-            <ol class="update-flow">
-              <li><span>1</span><div>Update seat, cabin and semantic fare data on the existing passenger.</div></li>
-              <li><span>2</span><div>Airship delivers the update to the installed wallet pass.</div></li>
-              <li><span>3</span><div>Apple refreshes the pass and its Live Activity.</div></li>
-            </ol>
+        <div class="experience-tabs" role="tablist" aria-label="Choose wallet platform">
+          <button class="experience-tab active" id="experience-tab-apple" type="button" role="tab" aria-selected="true" aria-controls="experience-apple" data-experience="apple">Apple Wallet</button>
+          <button class="experience-tab" id="experience-tab-google" type="button" role="tab" aria-selected="false" aria-controls="experience-google" data-experience="google" tabindex="-1">Google Wallet</button>
+        </div>
+
+        <div class="experience-panel apple" id="experience-apple" role="tabpanel" aria-labelledby="experience-tab-apple">
+          <div class="pass-update-proof">
+            <div class="pass-update-copy">
+              <h3>One passenger update changes the pass.</h3>
+              <p>The passenger object moved from Economy seat 48A to Business seat 8K. The pass refreshed without the passenger downloading it again.</p>
+              <ol class="update-flow">
+                <li><span>1</span><div>Update seat, cabin and semantic fare data on the existing passenger.</div></li>
+                <li><span>2</span><div>Airship delivers the update to the installed wallet pass.</div></li>
+                <li><span>3</span><div>Apple refreshes the pass and its Live Activity.</div></li>
+              </ol>
+            </div>
+
+            <div class="pass-comparison" aria-label="Apple boarding pass before and after a Business upgrade">
+              <figure class="phone-shot">
+                <a href="assets/screenshots/pass-economy.jpg" target="_blank">
+                  <img src="assets/screenshots/pass-economy.jpg" loading="lazy" alt="EK903 Apple Wallet pass before the update, showing Economy seat 48A">
+                </a>
+                <figcaption><strong>Before</strong>Economy · Seat 48A</figcaption>
+              </figure>
+              <span class="update-arrow" aria-hidden="true">→</span>
+              <figure class="phone-shot">
+                <a href="assets/screenshots/pass-business.jpg" target="_blank">
+                  <img src="assets/screenshots/pass-business.jpg" loading="lazy" alt="EK903 Apple Wallet pass after the update, showing Business seat 8K">
+                </a>
+                <figcaption><strong>After</strong>Business · Seat 8K</figcaption>
+              </figure>
+            </div>
           </div>
 
-          <div class="pass-comparison" aria-label="Boarding pass before and after a Business upgrade">
+          <div class="wallet-gallery" aria-label="Apple Wallet boarding pass experience screenshots">
             <figure class="phone-shot">
-              <a href="assets/screenshots/pass-economy.jpg" target="_blank">
-                <img src="assets/screenshots/pass-economy.jpg" loading="lazy" alt="EK903 pass before the update, showing Economy seat 48A">
+              <a href="assets/screenshots/live-activity-boarding.jpg" target="_blank">
+                <img src="assets/screenshots/live-activity-boarding.jpg" loading="lazy" alt="EK903 Live Activity showing walking time to the gate">
               </a>
-              <figcaption><strong>Before</strong>Economy · Seat 48A</figcaption>
+              <figcaption><strong>On the way to the gate</strong>Live Activity surfaces terminal, gate and walking time.</figcaption>
             </figure>
-            <span class="update-arrow" aria-hidden="true">→</span>
             <figure class="phone-shot">
-              <a href="assets/screenshots/pass-business.jpg" target="_blank">
-                <img src="assets/screenshots/pass-business.jpg" loading="lazy" alt="EK903 pass after the update, showing Business seat 8K">
+              <a href="assets/screenshots/seat-change-message.jpg" target="_blank">
+                <img src="assets/screenshots/seat-change-message.jpg" loading="lazy" alt="Apple Wallet notification stating seat changed to 8K">
               </a>
-              <figcaption><strong>After</strong>Business · Seat 8K</figcaption>
+              <figcaption><strong>Automatic seat alert</strong>Apple recognises the semantic seat change.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/upgrade-message.jpg" target="_blank">
+                <img src="assets/screenshots/upgrade-message.jpg" loading="lazy" alt="Custom notification stating the passenger was upgraded to Business seat 8K">
+              </a>
+              <figcaption><strong>Custom upgrade message</strong>A separate update delivers the Business upgrade alert.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/live-activity-boarding-now.jpg" target="_blank">
+                <img src="assets/screenshots/live-activity-boarding-now.jpg" loading="lazy" alt="EK903 Live Activity displaying Boarding Now">
+              </a>
+              <figcaption><strong>Boarding now</strong>The lock-screen state changes as the journey progresses.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/live-activity-airborne.jpg" target="_blank">
+                <img src="assets/screenshots/live-activity-airborne.jpg" loading="lazy" alt="EK903 Live Activity displaying in-flight progress from Dubai to Amman">
+              </a>
+              <figcaption><strong>In flight</strong>Progress, arrival terminal and baggage information remain visible.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/airport-map.jpg" target="_blank">
+                <img src="assets/screenshots/airport-map.jpg" loading="lazy" alt="Apple Maps view of Dubai International Airport opened from the boarding pass">
+              </a>
+              <figcaption><strong>Contextual airport actions</strong>The pass links passengers to maps, directions and airport details.</figcaption>
             </figure>
           </div>
+          <p class="screenshot-note">Screenshots captured on iPhone from the Airship-powered EK903 demo on 7 October 2026.</p>
         </div>
 
-        <div class="iphone-gallery" aria-label="iPhone boarding pass experience screenshots">
-          <figure class="phone-shot">
-            <a href="assets/screenshots/live-activity-boarding.jpg" target="_blank">
-              <img src="assets/screenshots/live-activity-boarding.jpg" loading="lazy" alt="EK903 Live Activity showing walking time to the gate">
-            </a>
-            <figcaption><strong>On the way to the gate</strong>Live Activity surfaces terminal, gate and walking time.</figcaption>
-          </figure>
-          <figure class="phone-shot">
-            <a href="assets/screenshots/seat-change-message.jpg" target="_blank">
-              <img src="assets/screenshots/seat-change-message.jpg" loading="lazy" alt="Apple Wallet notification stating seat changed to 8K">
-            </a>
-            <figcaption><strong>Automatic seat alert</strong>Apple recognises the semantic seat change.</figcaption>
-          </figure>
-          <figure class="phone-shot">
-            <a href="assets/screenshots/upgrade-message.jpg" target="_blank">
-              <img src="assets/screenshots/upgrade-message.jpg" loading="lazy" alt="Custom notification stating the passenger was upgraded to Business seat 8K">
-            </a>
-            <figcaption><strong>Custom upgrade message</strong>A separate update delivers the Business upgrade alert.</figcaption>
-          </figure>
-          <figure class="phone-shot">
-            <a href="assets/screenshots/live-activity-boarding-now.jpg" target="_blank">
-              <img src="assets/screenshots/live-activity-boarding-now.jpg" loading="lazy" alt="EK903 Live Activity displaying Boarding Now">
-            </a>
-            <figcaption><strong>Boarding now</strong>The lock-screen state changes as the journey progresses.</figcaption>
-          </figure>
-          <figure class="phone-shot">
-            <a href="assets/screenshots/live-activity-airborne.jpg" target="_blank">
-              <img src="assets/screenshots/live-activity-airborne.jpg" loading="lazy" alt="EK903 Live Activity displaying in-flight progress from Dubai to Amman">
-            </a>
-            <figcaption><strong>In flight</strong>Progress, arrival terminal and baggage information remain visible.</figcaption>
-          </figure>
-          <figure class="phone-shot">
-            <a href="assets/screenshots/airport-map.jpg" target="_blank">
-              <img src="assets/screenshots/airport-map.jpg" loading="lazy" alt="Apple Maps view of Dubai International Airport opened from the boarding pass">
-            </a>
-            <figcaption><strong>Contextual airport actions</strong>The pass links passengers to maps, directions and airport details.</figcaption>
-          </figure>
+        <div class="experience-panel google" id="experience-google" role="tabpanel" aria-labelledby="experience-tab-google" hidden>
+          <div class="pass-update-proof">
+            <div class="pass-update-copy">
+              <h3>The same update reaches Google Wallet.</h3>
+              <p>The Adaptive Link served a Google boarding pass from the Android template. The same passenger update changed Economy seat 48A to Business seat 8K.</p>
+              <ol class="update-flow">
+                <li><span>1</span><div>Use the same flight and passenger objects for both wallet platforms.</div></li>
+                <li><span>2</span><div>Airship updates the Google Wallet pass with the new cabin and seat.</div></li>
+                <li><span>3</span><div>Google Flights adds live status and journey notifications.</div></li>
+              </ol>
+            </div>
+
+            <div class="pass-comparison" aria-label="Google boarding pass before and after a Business upgrade">
+              <figure class="phone-shot">
+                <a href="assets/screenshots/google/pass-economy.jpg" target="_blank">
+                  <img src="assets/screenshots/google/pass-economy.jpg" loading="lazy" alt="EK903 Google Wallet pass before the update, showing Economy seat 48A">
+                </a>
+                <figcaption><strong>Before</strong>Economy · Seat 48A</figcaption>
+              </figure>
+              <span class="update-arrow" aria-hidden="true">→</span>
+              <figure class="phone-shot">
+                <a href="assets/screenshots/google/pass-business.jpg" target="_blank">
+                  <img src="assets/screenshots/google/pass-business.jpg" loading="lazy" alt="EK903 Google Wallet pass after the update, showing Business seat 8K">
+                </a>
+                <figcaption><strong>After</strong>Business · Seat 8K</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div class="wallet-gallery" aria-label="Google Wallet boarding pass experience screenshots">
+            <figure class="phone-shot">
+              <a href="assets/screenshots/google/lock-screen.jpg" target="_blank">
+                <img src="assets/screenshots/google/lock-screen.jpg" loading="lazy" alt="Android lock screen notification for EK903 boarding at gate C23">
+              </a>
+              <figcaption><strong>Lock-screen boarding reminder</strong>Boarding time, terminal and gate appear without opening Wallet.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/google/boarding-notification.jpg" target="_blank">
+                <img src="assets/screenshots/google/boarding-notification.jpg" loading="lazy" alt="Android notification shade showing EK903 boarding details">
+              </a>
+              <figcaption><strong>Persistent trip notification</strong>Google keeps the next relevant flight action visible.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/google/flight-progress.jpg" target="_blank">
+                <img src="assets/screenshots/google/flight-progress.jpg" loading="lazy" alt="Android notification shade showing EK903 in-flight progress">
+              </a>
+              <figcaption><strong>In-flight progress</strong>Estimated arrival and route progress update during the flight.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/google/flight-progress-late.jpg" target="_blank">
+                <img src="assets/screenshots/google/flight-progress-late.jpg" loading="lazy" alt="Later Android notification showing EK903 flight progress">
+              </a>
+              <figcaption><strong>Live journey state</strong>The progress indicator advances as EK903 approaches Amman.</figcaption>
+            </figure>
+            <figure class="phone-shot">
+              <a href="assets/screenshots/google/pass-details.jpg" target="_blank">
+                <img src="assets/screenshots/google/pass-details.jpg" loading="lazy" alt="Google Wallet EK903 pass detail fields">
+              </a>
+              <figcaption><strong>Pass details</strong>Passenger, ticket and boarding information remain available in Wallet.</figcaption>
+            </figure>
+          </div>
+          <p class="screenshot-note">Screenshots captured on Android from the same Airship-powered EK903 demo on 7 October 2026.</p>
         </div>
-        <p class="screenshot-note">Screenshots captured on iPhone from the Airship-powered EK903 demo on 7 October 2026.</p>
       </div>
     </section>
 
@@ -2992,6 +3141,8 @@ Content-Type: application/json
       const apiTabs = [...document.querySelectorAll(".api-tab")];
       const panels = [...document.querySelectorAll(".code-panel")];
       const lifeSteps = [...document.querySelectorAll(".life-step")];
+      const experienceTabs = [...document.querySelectorAll(".experience-tab")];
+      const experiencePanels = [...document.querySelectorAll(".experience-panel")];
       const lifecycleDetail = document.getElementById("lifecycle-detail");
       const lifecycleLink = document.getElementById("lifecycle-link");
       const toast = document.getElementById("toast");
@@ -3045,6 +3196,31 @@ Content-Type: application/json
           const next = apiTabs[(index + direction + apiTabs.length) % apiTabs.length];
           next.focus();
           activateTab(next.dataset.tab);
+        });
+      });
+
+      function activateExperience(name) {
+        experienceTabs.forEach((tab) => {
+          const active = tab.dataset.experience === name;
+          tab.classList.toggle("active", active);
+          tab.setAttribute("aria-selected", String(active));
+          tab.tabIndex = active ? 0 : -1;
+        });
+
+        experiencePanels.forEach((panel) => {
+          panel.hidden = panel.id !== `experience-${name}`;
+        });
+      }
+
+      experienceTabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateExperience(tab.dataset.experience));
+        tab.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+          event.preventDefault();
+          const direction = event.key === "ArrowRight" ? 1 : -1;
+          const next = experienceTabs[(index + direction + experienceTabs.length) % experienceTabs.length];
+          next.focus();
+          activateExperience(next.dataset.experience);
         });
       });
 
